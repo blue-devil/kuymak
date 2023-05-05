@@ -115,7 +115,7 @@ gcc -Wall kuymak.c -o kuymak
 * [x] Publish releases
 * [ ] Shellcode in a new thread; do we need that?
 * [x] Add, linux "Hello, world!" shellcode
-* [ ] Publish ARM releases
+* [x] Publish prebuilt ARM binaries
 * [x] Parse and execute shellcode from console
 
 ## Further Reading & Resources
@@ -131,7 +131,7 @@ Checkout other shellcode runner/debugger, pe2shellcode projects:
 
 ## LICENSE
 
-This project is licensed under GPLv3
+This project is licensed under GPLv3.
 
 [web-github-blobrunner]: https://github.com/OALabs/BlobRunner
 [web-github-crabrunner]: https://github.com/cdong1012/Crab-Runner
