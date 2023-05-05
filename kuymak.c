@@ -34,7 +34,7 @@
  *  Save your shellcode to a binary file and run as easily as:
  *  $ ./kuymak -b shellcode.bin
  *
- *  You can run your shellcode with "\x" specifiers directly from command line
+ *  You can run your shellcode with "\x" specifier directly from command line
  *  $ ./kuymak -c "\x48\x83\xEC\x28\x48 <snipped> \x00\x48\x8D"
  */
 #include <stdio.h>
@@ -64,8 +64,8 @@ void usage()
     fprintf(stdout, "KUYMAK v%s\n\n", ver);
     fprintf(stdout, "[*] USAGE:\n");
     fprintf(stdout, "\tkuymak -b shellcode.bin\n");
-    fprintf(stdout, "\tkuymak -c \\x0f\\x01\\xf8\\xe8\\x05\\x00\\x00\\x00"
-                    "\\x0f\\x01\\xf8\\x48\\xcf\n\n");
+    fprintf(stdout, "\tkuymak -c \"\\x0f\\x01\\xf8\\xe8\\x05\\x00\\x00\\x00"
+                    "\\x0f\\x01\\xf8\\x48\\xcf\"\n\n");
     fprintf(stdout, "[*] Options:\n");
     fprintf(stdout, "\t-b\tshellcode as a binary\n");
     fprintf(stdout, "\t-c\tshellcode as char array\n");

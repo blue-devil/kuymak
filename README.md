@@ -22,21 +22,21 @@ Black Sea Region.
  | |__________________________________________________________________| |
  |         ____________________________________________________         |
  |      -+| @author   : Blue DeviL <bluedevil.SCT@gmail.com>   |+-      |
- |     |  | @version  : 0.3.0                                  |  |     |
- +<===>+--| @date     : 23/08/2022                             |--+<===>+
+ |     |  | @version  : 0.4.0                                  |  |     |
+ +<===>+--| @date     : 06/05/2023                             |--+<===>+
        |  | @license  : GPLv3                                  |  |
         -+| @info     : Cross-platform shellcode runner        |+-
           |____________________________________________________|
 
-KUYMAK v0.3
+KUYMAK v0.4.0
 
 [*] USAGE:
         kuymak -b shellcode.bin
-        kuymak -k \x0f\x01\xf8\xe8\5\0\0\0\x0f\x01\xf8\x48\xcf
+        kuymak -c "\x0f\x01\xf8\xe8\x05\x00\x00\x00\x0f\x01\xf8\x48\xcf"
 
 [*] Options:
         -b      shellcode as a binary
-        -k      shellcode as char array (not implemented yet)
+        -c      shellcode as char array (not implemented yet)
         -h      prints this help
 ```
 
@@ -49,7 +49,11 @@ favourite editor. Then give this shellcode binary with parameter `-b`.
 kuymak -b shellcode.bin
 ```
 
-**TODO**: Give shellcode as a char array from commandline
+You can run your shellcode with "\x" specifier directly from command line:
+
+```txt
+kuymak -c "\x48\x83\xEC\x28\x48 <snipped> \x00\x48\x8D"
+```
 
 ## Requirements
 
