@@ -84,7 +84,7 @@ gcc -Wall kuymak.c -o kuymak
 Windows x86_64:
 
 ```txt
- * $ x86_64-w64-mingw32-gcc -Wall kuymak.c -o kuymak
+x86_64-w64-mingw32-gcc -Wall kuymak.c -o kuymak
 ```
 
 Windows x86_32:
@@ -108,9 +108,11 @@ gcc -Wall kuymak.c -o kuymak
 * [ ] Can we compile it with cl? Look for a workaround
 * [x] Add changelog
 * [x] Add, macOS "Hello, world!" shellcode
-* [ ] Publish releases
+* [x] Publish releases
 * [ ] Shellcode in a new thread; do we need that?
 * [x] Add, linux "Hello, world!" shellcode
+* [ ] Publish ARM releases
+* [x] Parse and execute shellcode from console
 
 ## Further Reading & Resources
 
