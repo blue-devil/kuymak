@@ -41,6 +41,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <unistd.h> // getopt defined here
 #ifdef __linux__
@@ -224,10 +225,10 @@ ssize_t get_shellcode2(char *sc)
 
     // lowercase the sc bytes if user uses \X instead of \x
     char c;
-    for (int i = 0; i < strlen(sc); i++)
+    for (int ix = 0; ix < strlen(sc); ix++)
     {
-        c = sc[i];
-        sc[i] = tolower(c);
+        c = sc[ix];
+        sc[ix] = tolower(c);
     }
 
     size_t i = 0;
