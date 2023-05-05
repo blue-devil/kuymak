@@ -14,62 +14,67 @@
 
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-/**
- * KUYMAK v0.3.0
- * A tasty cross-platform tool from Blacksea to debug shellcode!
  *
- * How to compile:
- * Linux:
- * $ gcc -Wall kuymak.c -o kuymak
+ *  KUYMAK
+ *  A tasty cross-platform tool from Blacksea to debug shellcode!
  *
- * Windows x86_64:
- * $ x86_64-w64-mingw32-gcc -Wall kuymak.c -o kuymak.exe
- * Windows x86_32:
- * $ i686-w64-mingw32-gcc -Wall kuymak.c -o kuymak.exe
+ *  How to compile:
+ *  If you have installed GCC or MingW on your host platform, you can compile
+ *  as simple as with this command:
  *
- * Apple:
- * gcc -Wall kuymak.c -o kuymak
+ *  $ gcc -Wall kuymak.c -o kuymak
  *
- * How to run
- * $ ./kuymak -b shellcode.bin
+ *  You can compile for Windows if you installed cross-compilers.
+ *  Windows x86_64:
+ *  $ x86_64-w64-mingw32-gcc -Wall kuymak.c -o kuymak.exe
+ *  Windows x86_32:
+ *  $ i686-w64-mingw32-gcc -Wall kuymak.c -o kuymak.exe
+ *
+ *  How to run:
+ *  Save your shellcode to a binary file and run as easily as:
+ *  $ ./kuymak -b shellcode.bin
+ *
+ *  You can run your shellcode with "\x" specifiers directly from command line
+ *  $ ./kuymak -c "\x48\x83\xEC\x28\x48 <snipped> \x00\x48\x8D"
  */
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include <unistd.h> // getopt burada tanımlı
+#include <unistd.h> // getopt defined here
 #ifdef __linux__
-#include <sys/mman.h> // mmap burada tanımlı
+#include <sys/mman.h> // mmap defined here
 #elif _WIN64
 #include <windows.h>
-//#include <WinBase.h>
+// #include <WinBase.h>
 #elif _WIN32
 #include <windows.h>
 #elif __APPLE__
 #include <sys/mman.h>
 #endif
 
+const char *ver = "0.4.0";
+const char *date = "06/05/2023";
 unsigned char *shellcode;
 
 void usage()
 {
-    fprintf(stdout, "KUYMAK v0.3.0\n\n");
+    fprintf(stdout, "KUYMAK v%s\n\n", ver);
     fprintf(stdout, "[*] USAGE:\n");
     fprintf(stdout, "\tkuymak -b shellcode.bin\n");
-    fprintf(stdout, "\tkuymak -k \\x0f\\x01\\xf8\\xe8\\5\\0\\0\\0\\x0f\\x01"
-                    "\\xf8\\x48\\xcf\n\n");
+    fprintf(stdout, "\tkuymak -c \\x0f\\x01\\xf8\\xe8\\x05\\x00\\x00\\x00"
+                    "\\x0f\\x01\\xf8\\x48\\xcf\n\n");
     fprintf(stdout, "[*] Options:\n");
     fprintf(stdout, "\t-b\tshellcode as a binary\n");
-    fprintf(stdout, "\t-k\tshellcode as char array (not implemented yet)\n");
+    fprintf(stdout, "\t-c\tshellcode as char array\n");
     fprintf(stdout, "\t-h\tprints this help\n");
     return;
 }
 
 void print_banner(void)
 {
-    char *banner =
+    char *bannerfmt =
         "    __________________________________________________________________\n"
         "   |         ...-...  .'\\\\   _   __                            _      |\n"
         "   |      ./sh0mmm0hs+\\  o  | | / /                           | |     |\n"
@@ -84,11 +89,13 @@ void print_banner(void)
         " | |__________________________________________________________________| |\n"
         " |         ____________________________________________________         |\n"
         " |      -+| @author   : Blue DeviL <bluedevil.SCT@gmail.com>   |+-      |\n"
-        " |     |  | @version  : 0.3.0                                  |  |     |\n"
-        " +<===>+--| @date     : 23/08/2022                             |--+<===>+\n"
+        " |     |  | @version  : %s                                  |  |     |\n"
+        " +<===>+--| @date     : %s                             |--+<===>+\n"
         "       |  | @license  : GPLv3                                  |  |\n"
         "        -+| @info     : Cross-platform shellcode runner        |+-\n"
         "          |____________________________________________________|\n\n";
+    char banner[2048];
+    sprintf(banner, bannerfmt, ver, date);
     fprintf(stdout, "%s", banner);
 }
 
@@ -101,7 +108,7 @@ void print_banner(void)
 void *map_shellcode(ssize_t file_size)
 {
 #ifdef __linux__
-    // allocate an executable/readabşe/writable area inside memory
+    // allocate an executable/readable/writable area inside memory
     void *pSC = mmap(0, sizeof(shellcode),
                      PROT_EXEC | PROT_WRITE | PROT_READ,
                      MAP_ANONYMOUS | MAP_PRIVATE,
@@ -196,7 +203,45 @@ ssize_t get_shellcode(char *shellcode_path)
 }
 
 /**
- * run_shellcode - takes shellcodes pointer as a parameter; jumps that
+ * get_shellcode2 - gets shellcode from commandline
+ * @sc: shellcode from commandline as "\x53\x43\X54"
+ *
+ * Return value:    SUCC    file size
+ *                  FAIL    exit process
+ */
+ssize_t get_shellcode2(char *sc)
+{
+    static ssize_t file_size = 0;
+    file_size = strlen(sc) / 4 + 1;
+
+    // allocate space in heap as much shellcode size
+    shellcode = (unsigned char *)malloc(file_size + 1);
+    if (shellcode == NULL)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    // lowercase the sc bytes if user uses \X instead of \x
+    char c;
+    for (int i = 0; i < strlen(sc); i++)
+    {
+        c = sc[i];
+        sc[i] = tolower(c);
+    }
+
+    size_t i = 0;
+    for (char *tok = strtok(sc, "\\x"); tok; tok = strtok(NULL, "\\x"))
+    {
+        sscanf(tok, "%02hhx", shellcode + i);
+        i++;
+    }
+
+    return file_size;
+}
+
+/**
+ * run_shellcode - takes shellcode's pointer as a parameter; jumps that
  * memory address and executes shellcode
  *
  * @pSC:    pointer of shellcode
@@ -228,7 +273,7 @@ int main(int argc, char **argv)
         usage();
     }
 
-    while ((opt = getopt(argc, argv, "hb:k:")) != -1)
+    while ((opt = getopt(argc, argv, "hb:c:")) != -1)
     {
         switch (opt)
         {
@@ -240,7 +285,8 @@ int main(int argc, char **argv)
             run_shellcode(map_shellcode(get_shellcode(optarg)));
             break;
         case 'c':
-            fprintf(stdout, "[*] Shellcode as chars : %s", optarg);
+            fprintf(stdout, "[*] Shellcode as chars : %s\n", optarg);
+            run_shellcode(map_shellcode(get_shellcode2(optarg)));
             break;
         default:
             // usage();

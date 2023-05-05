@@ -1,12 +1,13 @@
-![Kuymak](https://gitlab.com/bluedevil/kuymak/-/raw/master/art/banner_kuymak_eng.png)
-
 # Kuymak
+
+![Kuymak](art/banner_kuymak_eng.png)
 
 A tasty cross-platform tool from Blacksea to inspect/debug/run shellcode.
 
-**Linguistic info**: [Kuymak][web-wiki-kuymak] is a regional meal of Turkey's Black Sea Region.
+**Linguistic info**: [Kuymak][web-wiki-kuymak] is a regional meal of Turkey's
+Black Sea Region.
 
-```
+```txt
     __________________________________________________________________
    |         ...-...  .'\\   _   __                            _      |
    |      ./sh0mmm0hs+\  o  | | / /                           | |     |
@@ -41,9 +42,11 @@ KUYMAK v0.3
 
 ## Usage
 
-Save your shellcode as a binary file. You can use HxD, xxd or use your favourite editor. Then give this shellcode binary with parameter `-b`.
-```
-$ kuymak -b shellcode.bin
+Save your shellcode as a binary file. You can use HxD, xxd or use your
+favourite editor. Then give this shellcode binary with parameter `-b`.
+
+```txt
+kuymak -b shellcode.bin
 ```
 
 **TODO**: Give shellcode as a char array from commandline
@@ -60,38 +63,45 @@ You only need GCC to build Kuymak.
 * macOS
   * Open terminal and run this command: `xcode-select --install`
 * Windows
-  1. Install Mingw-w64 via [MSYS2][web-msys2]. Download the installer and install it.
+  1. Install Mingw-w64 via [MSYS2][web-msys2]. Download the installer and
+     install it.
   2. Alternatively you can use winget: `winget install -e --id msys2.msys2`
-  3. After installation fire up MSYS2 shell and run: `pacman -S --needed base-devel mingw-w64-x86_64-toolchain`
+  3. After installation fire up MSYS2 shell and run:
+     `pacman -S --needed base-devel mingw-w64-x86_64-toolchain`
 
 ## Building
 
 If you have GCC on your system building is very straightforward:
 
-**LINUX**
+**LINUX**:
 
-```
-$ gcc -Wall kuymak.c -o kuymak
+```txt
+gcc -Wall kuymak.c -o kuymak
 ```
 
-**WINDOWS**
+**WINDOWS**:
 
-```
- * Windows x86_64:
+Windows x86_64:
+
+```txt
  * $ x86_64-w64-mingw32-gcc -Wall kuymak.c -o kuymak
- * Windows x86_32:
- * $ i686-w64-mingw32-gcc -Wall kuymak.c -o kuymak
 ```
 
-**APPLE**
+Windows x86_32:
 
+```txt
+i686-w64-mingw32-gcc -Wall kuymak.c -o kuymak
 ```
-$ gcc -Wall kuymak.c -o kuymak
+
+**APPLE**:
+
+```txt
+gcc -Wall kuymak.c -o kuymak
 ```
 
 ## TODO
 
-* [x] Make a version for macOS(use __APPLE__ preprocessor expression)
+* [x] Make a version for macOS(use `__APPLE__` preprocessor expression)
 * [x] Create a shellcode runner
 * [x] Ask user if he/she wants to run shellcode or not
 * [ ] Get rid of unistd+getopt dependency
