@@ -117,6 +117,11 @@ gcc -Wall kuymak.c -o kuymak
 * [x] Add, linux "Hello, world!" shellcode
 * [x] Publish prebuilt ARM binaries
 * [x] Parse and execute shellcode from console
+* [ ] Check if null bytes exist? And print info to user
+* [ ] Can i add an option of printing objdump output of given shellcode
+* [ ] Can i add an option of printing dumpbin output of given shellcode
+* [ ] Add sample shell code of execve
+* [ ] Add null-free sample shellcodes
 
 ## Further Reading & Resources
 
